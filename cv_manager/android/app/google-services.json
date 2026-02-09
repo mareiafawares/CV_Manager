@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "947085150136",
+    "project_id": "cv-manager-1a6ae",
+    "storage_bucket": "cv-manager-1a6ae.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947085150136:android:0a09ff84077cffdffeb14d",
+        "android_client_info": {
+          "package_name": "com.example.cv_manager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsH4iRhHQjsyumRZIf-SRPonVL1QiFBIs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
