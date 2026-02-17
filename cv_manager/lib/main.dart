@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'CV Manager',
      
-      home: const SplashScreen(),
+      home:SplashScreen(),
       
       
     );

@@ -13,7 +13,7 @@ class AuthWrapper extends StatelessWidget {
       builder: (context, snapshot) {
         
         if (snapshot.hasData) {
-          return const HomeScreen();
+          return const HomeScreen(isDark: true);
         }
        
         else {

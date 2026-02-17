@@ -2,6 +2,7 @@ import 'package:cv_manager/services/wrapper/auth_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'login_screen.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -10,75 +11,128 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    
-   Timer(const Duration(seconds: 3), () {
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => const AuthWrapper()), 
-  );
-});
-  }
+  double _pullDistance = 0.0;
 
   @override
   Widget build(BuildContext context) {
-    
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A), 
-      body: SizedBox(
-        width: screenWidth, 
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-           
-            Icon(
-              Icons.contact_page_rounded,
-              size: screenWidth * 0.25, 
-              color: Colors.blueAccent,
-            ),
-            
-            
-            SizedBox(height: screenHeight * 0.05),
-
-            
-            SizedBox(
-              width: screenWidth * 0.5,
-              child: const LinearProgressIndicator(
-                backgroundColor: Colors.white10,
-                color: Colors.blueAccent,
-                minHeight: 4,
+      backgroundColor: Colors.black,
+      body: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Positioned(
+            top: -50,
+            child: Container(
+              width: size.width * 1.5,
+              height: size.height * 0.6,
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment.topCenter,
+                  radius: 0.8,
+                  colors: [
+                    Colors.yellow.withOpacity(0.35),
+                    Colors.white.withOpacity(0.05),
+                    Colors.transparent,
+                  ],
+                ),
               ),
             ),
-
-            SizedBox(height: screenHeight * 0.04),
-
-           
-            const Text(
-              "Programmed by:",
-              style: TextStyle(
-                color: Colors.white54,
-                fontSize: 14,
-                letterSpacing: 1.5,
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.article_rounded,
+                  size: 80,
+                  color: Colors.white,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "Programmer",
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.6),
+                    fontSize: 20,
+                    letterSpacing: 4,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "MARIA AL-FAWARES",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: size.width / 2 - 1,
+            child: GestureDetector(
+              onVerticalDragUpdate: (details) {
+                setState(() {
+                  if (_pullDistance < 120) _pullDistance += details.delta.dy;
+                });
+              },
+              onVerticalDragEnd: (details) {
+                if (_pullDistance > 80) {
+                  _triggerNavigation();
+                } else {
+                  setState(() => _pullDistance = 0);
+                }
+              },
+              child: Column(
+                children: [
+                  Container(
+                    width: 3,
+                    height: (size.height * 0.25) + _pullDistance,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[800],
+                      boxShadow: const [
+                        BoxShadow(color: Colors.black, blurRadius: 2, spreadRadius: 1)
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 30,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.grey[800]!, Colors.black],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.white24, width: 1),
+                    ),
+                    child: const Icon(Icons.power_settings_new, color: Colors.yellow, size: 18),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-            const Text(
-              "MARIA FAWARES",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2.0,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _triggerNavigation() {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, anim, secAnim) => const LoginScreen(),
+        transitionDuration: const Duration(milliseconds: 500),
+        transitionsBuilder: (context, anim, secAnim, child) {
+          return FadeTransition(opacity: anim, child: child);
+        },
       ),
     );
   }
