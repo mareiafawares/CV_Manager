@@ -36,8 +36,42 @@ class _AddCVScreenState extends State<AddCVScreen> {
   @override
   void initState() {
     super.initState();
-    _addNewExperience();
-    _addNewSkill();
+   
+    _initializeData();
+  }
+
+  void _initializeData() {
+    if (widget.existingData != null) {
+     
+      _nameController.text = widget.existingData!['name'] ?? "";
+      _jobController.text = widget.existingData!['jobTitle'] ?? "";
+      _summaryController.text = widget.existingData!['summary'] ?? "";
+      _phoneController.text = widget.existingData!['phone'] ?? "";
+      _emailController.text = widget.existingData!['email'] ?? "";
+      _addressController.text = widget.existingData!['address'] ?? "";
+      
+     
+      if (widget.existingData!['skills'] != null) {
+        for (var skill in widget.existingData!['skills']) {
+          _skillControllers.add(TextEditingController(text: skill.toString()));
+        }
+      }
+
+      
+      if (widget.existingData!['experience'] != null) {
+        for (var exp in widget.existingData!['experience']) {
+          _experienceFields.add({
+            'company': TextEditingController(text: exp['company'] ?? ""),
+            'role': TextEditingController(text: exp['role'] ?? ""),
+            'years': TextEditingController(text: exp['years'] ?? ""),
+          });
+        }
+      }
+    }
+
+  
+    if (_experienceFields.isEmpty) _addNewExperience();
+    if (_skillControllers.isEmpty) _addNewSkill();
   }
 
   void _addNewExperience() {
@@ -58,14 +92,12 @@ class _AddCVScreenState extends State<AddCVScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text("Template ${widget.templateId} Details",
+        title: Text(widget.docId == null ? "Build Your CV" : "Edit Your CV",
             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
       body: Container(
@@ -159,9 +191,10 @@ class _AddCVScreenState extends State<AddCVScreen> {
     );
   }
 
+  
+
   Widget _buildSectionTitle(String title) {
-    return Text(title,
-        style: const TextStyle(color: Colors.cyanAccent, fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 1.5));
+    return Text(title, style: const TextStyle(color: Colors.cyanAccent, fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 1.5));
   }
 
   Widget _buildGlassInput(String hint, IconData icon, TextEditingController controller, {int maxLines = 1}) {
@@ -227,17 +260,13 @@ class _AddCVScreenState extends State<AddCVScreen> {
               decoration: BoxDecoration(
                 color: isPublic ? AppColors.primaryBlue.withOpacity(0.5) : AppColors.glassWhite,
                 borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: isPublic ? AppColors.primaryBlue : AppColors.glassBorder,
-                  width: 2,
-                ),
+                border: Border.all(color: isPublic ? AppColors.primaryBlue : AppColors.glassBorder, width: 2),
               ),
               child: Column(
                 children: [
                   Icon(Icons.public, color: isPublic ? Colors.white : Colors.white70),
                   const SizedBox(height: 5),
                   const Text("Public", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  const Text("Visible to everyone", style: TextStyle(color: Colors.white60, fontSize: 10)),
                 ],
               ),
             ),
@@ -252,17 +281,13 @@ class _AddCVScreenState extends State<AddCVScreen> {
               decoration: BoxDecoration(
                 color: !isPublic ? AppColors.primaryBlue.withOpacity(0.5) : AppColors.glassWhite,
                 borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: !isPublic ? AppColors.primaryBlue : AppColors.glassBorder,
-                  width: 2,
-                ),
+                border: Border.all(color: !isPublic ? AppColors.primaryBlue : AppColors.glassBorder, width: 2),
               ),
               child: Column(
                 children: [
                   Icon(Icons.lock_outline, color: !isPublic ? Colors.white : Colors.white70),
                   const SizedBox(height: 5),
                   const Text("Private", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  const Text("Only you can see it", style: TextStyle(color: Colors.white60, fontSize: 10)),
                 ],
               ),
             ),
@@ -281,7 +306,7 @@ class _AddCVScreenState extends State<AddCVScreen> {
             builder: (context) => CVPreviewScreen(
               templateId: widget.templateId,
               isPublic: isPublic,
-              docId: widget.docId,
+              docId: widget.docId, 
               userData: {
                 'name': _nameController.text,
                 'jobTitle': _jobController.text,
@@ -307,15 +332,10 @@ class _AddCVScreenState extends State<AddCVScreen> {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          gradient: const LinearGradient(
-            colors: [Color(0xFF9587D3), Color(0xFF6A5AE0)],
-          ),
+          gradient: const LinearGradient(colors: [Color(0xFF9587D3), Color(0xFF6A5AE0)]),
         ),
         child: const Center(
-          child: Text(
-            "GENERATE PREVIEW",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-          ),
+          child: Text("GENERATE PREVIEW", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
         ),
       ),
     );

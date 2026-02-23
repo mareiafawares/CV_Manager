@@ -219,17 +219,17 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Row(
                   children: [
+                    // --- تعديل زر التعديل ليرجع لصفحة اختيار القالب (الثيم) ---
                     IconButton(
                       icon: const Icon(Icons.edit_note_rounded, color: Colors.amberAccent, size: 26),
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AddCVScreen(
+                            builder: (context) => TemplateSelectionScreen(
                               isDark: isDark,
-                              templateId: data['templateId'] ?? 1,
-                              existingData: data['userData'],
-                              docId: docId,
+                              existingData: data['userData'], // تمرير البيانات القديمة
+                              docId: docId, // تمرير الـ ID لتعديله لاحقاً
                             ),
                           ),
                         );

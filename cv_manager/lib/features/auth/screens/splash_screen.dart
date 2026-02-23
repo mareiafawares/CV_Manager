@@ -1,5 +1,7 @@
+import 'package:cv_manager/providers/auth_provider.dart';
 import 'package:cv_manager/services/wrapper/auth_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:async';
 import 'login_screen.dart';
 
@@ -22,6 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Stack(
         alignment: Alignment.topCenter,
         children: [
+          // الإضاءة الخلفية (Gradient)
           Positioned(
             top: -50,
             child: Container(
@@ -40,6 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           ),
+        
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -73,6 +77,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ],
             ),
           ),
+        
           Positioned(
             top: 0,
             left: size.width / 2 - 1,
@@ -124,11 +129,18 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
+  
   void _triggerNavigation() {
+    
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    
+    Widget nextScreen = authProvider.user != null ? const AuthWrapper() : const LoginScreen();
+
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, anim, secAnim) => const LoginScreen(),
+        pageBuilder: (context, anim, secAnim) => nextScreen,
         transitionDuration: const Duration(milliseconds: 500),
         transitionsBuilder: (context, anim, secAnim, child) {
           return FadeTransition(opacity: anim, child: child);
@@ -137,3 +149,5 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+
+

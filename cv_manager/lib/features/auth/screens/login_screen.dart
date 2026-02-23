@@ -2,7 +2,8 @@ import 'dart:ui';
 import 'package:cv_manager/core/common_widgets/PulseButton.dart';
 import 'package:cv_manager/features/auth/screens/main_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart'; 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart'; 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/common_widgets/custom_text_field.dart';
 import 'package:cv_manager/services/firebase/auth_service.dart'; 
@@ -23,7 +24,42 @@ class _LoginScreenState extends State<LoginScreen> {
   
   bool _rememberMe = false;
   bool _isLoading = false;
+Future<void> signInWithGoogle() async {
+  try {
+    // 1. بدء عملية تسجيل الدخول وفتح نافذة الحسابات
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    
+    if (googleUser == null) {
+      // إذا المستخدم أغلق النافذة وما اختار حساب
+      return; 
+    }
 
+    // 2. الحصول على معلومات المصادقة من الحساب المختار
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    // 3. إنشاء "هوية" (Credential) لفايربيز
+    final OAuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    // 4. تسجيل الدخول الفعلي في فايربيز
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+    
+    // إذا وصلنا هون، يعني نجحنا!
+    print("نجح الدخول! المستخدم هو: ${userCredential.user?.displayName}");
+    
+    // اختياري: انتقلي للصفحة الرئيسية بعد النجاح
+    // Navigator.pushReplacementNamed(context, '/home');
+
+  } catch (e) {
+    print("حدث خطأ في جوجل: $e");
+    // أظهري رسالة خطأ للمستخدم
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error: $e")),
+    );
+  }
+}
   @override
   void dispose() {
     _emailController.dispose();
@@ -257,27 +293,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 25),
-                                const Text("OR CONTINUE WITH", style: TextStyle(color: Colors.white60, fontSize: 11, fontWeight: FontWeight.bold)),
-                                const SizedBox(height: 20),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: PulsatingSocialButton(
-                                        label: "Google",
-                                        imagePath: "asset/google.png",
-                                        onTap: () {},
-                                      ),
-                                    ),
-                                    const SizedBox(width: 15),
-                                    Expanded(
-                                      child: PulsatingSocialButton(
-                                        label: "GitHub",
-                                        imagePath: "asset/github.png",
-                                        onTap: () {},
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                               
                               ],
                             ),
                           ),

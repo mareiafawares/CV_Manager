@@ -1,10 +1,13 @@
 import 'dart:ui';
+import 'package:cv_manager/features/auth/screens/main_wrapper.dart';
 import 'package:cv_manager/models/user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart'; 
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider; 
+import 'package:cv_manager/providers/auth_provider.dart' ;
+import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/common_widgets/custom_text_field.dart';
-import 'package:cv_manager/services/firebase/auth_service.dart'; 
+
 import 'home.dart'; 
 
 class SignUpScreen extends StatefulWidget {
@@ -22,9 +25,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   
-  final AuthService _authService = AuthService();
-  bool _isLoading = false;
-
   @override
   void dispose() {
     _nameController.dispose();
@@ -49,6 +49,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+   
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       body: Container(
@@ -157,14 +159,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   width: double.infinity,
                                   height: 55,
                                   child: ElevatedButton(
-                                    onPressed: _isLoading ? null : _handleSignUp,
+                                   
+                                    onPressed: authProvider.isLoading ? null : _handleSignUp,
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.cyanAccent.shade700,
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                                       elevation: 8,
                                     ),
-                                    child: _isLoading 
-                                      ? const CircularProgressIndicator(color: Colors.white)
+                                    child: authProvider.isLoading 
+                                      ? const SizedBox(
+                                          width: 25,
+                                          height: 25,
+                                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                        )
                                       : const Text("SIGN UP", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                                   ),
                                 ),
@@ -204,24 +211,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> _handleSignUp() async {
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
       
       try {
-        UserModel newUser = UserModel(
-          uid: "", 
-          name: _nameController.text.trim(),
-          email: _emailController.text.trim(),
-          createdAt: DateTime.now(),
+       
+        bool success = await authProvider.signUp(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
+          _nameController.text.trim(),
         );
 
-        var user = await _authService.signUp(
-          user: newUser, 
-          password: _passwordController.text.trim(),
-        );
-
-        if (user != null && mounted) {
+        if (success && mounted) {
           _showSnackBar("Account created successfully!", isError: false);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen(isDark: true)));
+         
+          Navigator.pushAndRemoveUntil(
+    context, 
+    MaterialPageRoute(builder: (context) => const MainWrapper()), 
+    (route) => false,);
         }
       } on FirebaseAuthException catch (e) {
         String errorMessage = "Registration Failed";
@@ -233,8 +239,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _showSnackBar(errorMessage);
       } catch (e) {
         _showSnackBar("Something went wrong. Please try again.");
-      } finally {
-        if (mounted) setState(() => _isLoading = false);
       }
     }
   }

@@ -3,7 +3,16 @@ import 'add_cv_screen.dart';
 
 class TemplateSelectionScreen extends StatelessWidget {
   final bool isDark;
-  const TemplateSelectionScreen({super.key, required this.isDark});
+  // إضافة المتغيرات لاستقبال بيانات التعديل
+  final Map<String, dynamic>? existingData;
+  final String? docId;
+
+  const TemplateSelectionScreen({
+    super.key, 
+    required this.isDark, 
+    this.existingData, // اختياري: لو جاي من زر التعديل بكون فيه قيمة
+    this.docId,        // اختياري: لو جاي من زر التعديل بكون فيه قيمة
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +54,16 @@ class TemplateSelectionScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
+              // عند الضغط على أي قالب، نمرر كل شيء لصفحة الإضافة/التعديل
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddCVScreen(isDark: isDark, templateId: index + 1),
+                  builder: (context) => AddCVScreen(
+                    isDark: isDark, 
+                    templateId: index + 1,
+                    existingData: existingData, // البيانات اللي اجت من الهوم
+                    docId: docId,               // الـ ID عشان نعدل نفس المستند
+                  ),
                 ),
               );
             },
@@ -69,7 +84,10 @@ class TemplateSelectionScreen extends StatelessWidget {
                         image: AssetImage(templates[index]["image"]!),
                         fit: BoxFit.cover,
                       ),
-                      border: Border.all(color: Colors.white.withOpacity(0.1), width: 1.5),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.1), 
+                        width: 1.5
+                      ),
                     ),
                   ),
                 ),

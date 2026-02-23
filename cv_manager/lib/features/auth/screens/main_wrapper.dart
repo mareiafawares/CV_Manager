@@ -1,6 +1,8 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cv_manager/features/auth/screens/community_screen.dart';
 import 'package:cv_manager/features/auth/screens/login_screen.dart';
+import 'package:cv_manager/features/auth/screens/notifications_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,11 +36,33 @@ class _MainWrapperState extends State<MainWrapper> {
     super.dispose();
   }
 
-  // تأكدي أن عدد الصفحات هنا يساوي عدد الأيقونات في الأسفل
+
+  Future<void> _clearNotifications() async {
+    final String currentUserId = user?.uid ?? "";
+    try {
+      var query = await FirebaseFirestore.instance
+          .collection('notifications')
+          .where('receiverId', isEqualTo: currentUserId)
+          .where('isRead', isEqualTo: false)
+          .get();
+
+      if (query.docs.isNotEmpty) {
+        WriteBatch batch = FirebaseFirestore.instance.batch();
+        for (var doc in query.docs) {
+          batch.update(doc.reference, {'isRead': true});
+        }
+        await batch.commit();
+        debugPrint("✅ Notifications marked as read");
+      }
+    } catch (e) {
+      debugPrint("❌ Error clearing notifications: $e");
+    }
+  }
+
   List<Widget> get _pages => [
     HomeScreen(isDark: isDarkTheme), 
     CommunityPage(isDark: isDarkTheme),
-    const Center(child: Text("Messages Coming Soon", style: TextStyle(color: Colors.white))), // صفحة مؤقتة للرسائل
+    NotificationsScreen(isDark: isDarkTheme),
   ];
 
   @override
@@ -79,18 +103,71 @@ class _MainWrapperState extends State<MainWrapper> {
         items: <Widget>[
           Icon(Icons.home_rounded, size: 30, color: _currentIndex == 0 ? const Color(0xFF6A5AE0) : Colors.white),
           Icon(Icons.groups_3_rounded, size: 30, color: _currentIndex == 1 ? const Color(0xFF6A5AE0) : Colors.white),
-          Icon(Icons.mark_as_unread_sharp, size: 30, color: _currentIndex == 2 ? const Color(0xFF6A5AE0) : Colors.white),
+          
+        
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('notifications')
+                .where('receiverId', isEqualTo: user?.uid)
+                .where('isRead', isEqualTo: false)
+                .snapshots(),
+            builder: (context, snapshot) {
+              int unreadCount = 0;
+              if (snapshot.hasData) {
+                unreadCount = snapshot.data!.docs.length;
+              }
+
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Icon(
+                    Icons.notifications, 
+                    size: 30, 
+                    color: _currentIndex == 2 ? const Color(0xFF6A5AE0) : Colors.white
+                  ),
+                  if (unreadCount > 0)
+                    Positioned(
+                      right: -4,
+                      top: -4,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.white, width: 1.5),
+                        ),
+                        constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+                        child: Text(
+                          unreadCount > 9 ? '+9' : '$unreadCount',
+                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
         ],
         buttonBackgroundColor: Colors.white, 
         color: isDarkTheme ? const Color(0xFF9587D3).withOpacity(0.4) : Colors.white.withOpacity(0.3),
         backgroundColor: Colors.transparent,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 400),
-        onTap: (index) => setState(() => _currentIndex = index),
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+         
+          if (index == 2) {
+            _clearNotifications();
+          }
+        },
       ),
     );
   }
 
+ 
   Widget _buildGlassDrawer() {
     return Drawer(
       backgroundColor: Colors.transparent,
@@ -108,7 +185,7 @@ class _MainWrapperState extends State<MainWrapper> {
                 child: ListView(
                   padding: const EdgeInsets.only(top: 10),
                   children: [
-                    _buildDrawerItem(Icons.language_rounded, "App Language", "العربية / English", () {}),
+                  
                     _buildDrawerItem(
                       Icons.color_lens_rounded, 
                       "Theme Mode", 
@@ -130,7 +207,7 @@ class _MainWrapperState extends State<MainWrapper> {
 
   Widget _buildDrawerHeader() {
     return Container(
-      padding: const EdgeInsets.only(top: 60, bottom: 25),
+      padding: const EdgeInsets.symmetric(vertical: 25),
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.03),
@@ -138,6 +215,7 @@ class _MainWrapperState extends State<MainWrapper> {
       ),
       child: Column(
         children: [
+          const SizedBox(height: 35),
           _buildProfileAvatar(),
           const SizedBox(height: 15),
           _buildNameField(),
@@ -148,29 +226,17 @@ class _MainWrapperState extends State<MainWrapper> {
   }
 
   Widget _buildProfileAvatar() {
-    return Stack(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(3),
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(colors: [Color(0xFF9587D3), Colors.cyanAccent]),
-          ),
-          child: const CircleAvatar(
-            radius: 45,
-            backgroundColor: Color(0xFF0F2027),
-            child: Icon(Icons.person, size: 50, color: Colors.white),
-          ),
-        ),
-        Positioned(
-          bottom: 0, right: 0,
-          child: Container(
-            height: 30, width: 30,
-            decoration: const BoxDecoration(color: Colors.cyanAccent, shape: BoxShape.circle),
-            child: const Icon(Icons.camera_alt_rounded, size: 18, color: Colors.black),
-          ),
-        ),
-      ],
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(colors: [Color(0xFF9587D3), Colors.cyanAccent]),
+      ),
+      child: const CircleAvatar(
+        radius: 45,
+        backgroundColor: Color(0xFF0F2027),
+        child: Icon(Icons.person, size: 50, color: Colors.white),
+      ),
     );
   }
 
