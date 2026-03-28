@@ -1,6 +1,5 @@
 
 import 'dart:typed_data';
-import 'package:cv_manager/services/share/pdf_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,18 +38,21 @@ class _CVPreviewScreenState extends State<CVPreviewScreen> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      final dataToSave = {
-        ...widget.userData,
-        'templateId': widget.templateId,
-        'isPublic': widget.isPublic, 
-        'userId': user.uid,
-        'createdAt': FieldValue.serverTimestamp(),
-      };
-
       if (widget.docId != null) {
-        await FirebaseFirestore.instance.collection('cvs').doc(widget.docId).update(dataToSave);
+        await FirebaseFirestore.instance.collection('cvs').doc(widget.docId).update({
+          ...widget.userData,
+          'templateId': widget.templateId,
+          'isPublic': widget.isPublic,
+          'userId': user.uid,
+        });
       } else {
-        await FirebaseFirestore.instance.collection('cvs').add(dataToSave);
+        await FirebaseFirestore.instance.collection('cvs').add({
+          ...widget.userData,
+          'templateId': widget.templateId,
+          'isPublic': widget.isPublic,
+          'userId': user.uid,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
       }
 
       if (!mounted) return;

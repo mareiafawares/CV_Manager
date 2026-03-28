@@ -6,12 +6,15 @@ class TemplateSelectionScreen extends StatelessWidget {
   // إضافة المتغيرات لاستقبال بيانات التعديل
   final Map<String, dynamic>? existingData;
   final String? docId;
+  /// When editing, preserves public/private choice from Firestore.
+  final bool? initialIsPublic;
 
   const TemplateSelectionScreen({
     super.key, 
     required this.isDark, 
-    this.existingData, // اختياري: لو جاي من زر التعديل بكون فيه قيمة
-    this.docId,        // اختياري: لو جاي من زر التعديل بكون فيه قيمة
+    this.existingData,
+    this.docId,
+    this.initialIsPublic,
   });
 
   @override
@@ -61,8 +64,9 @@ class TemplateSelectionScreen extends StatelessWidget {
                   builder: (context) => AddCVScreen(
                     isDark: isDark, 
                     templateId: index + 1,
-                    existingData: existingData, // البيانات اللي اجت من الهوم
-                    docId: docId,               // الـ ID عشان نعدل نفس المستند
+                    existingData: existingData,
+                    docId: docId,
+                    initialIsPublic: initialIsPublic,
                   ),
                 ),
               );

@@ -8,6 +8,7 @@ class AddCVScreen extends StatefulWidget {
   final int templateId;
   final Map<String, dynamic>? existingData;
   final String? docId;
+  final bool? initialIsPublic;
 
   const AddCVScreen({
     super.key,
@@ -15,6 +16,7 @@ class AddCVScreen extends StatefulWidget {
     required this.templateId,
     this.existingData,
     this.docId,
+    this.initialIsPublic,
   });
 
   @override
@@ -51,25 +53,34 @@ class _AddCVScreenState extends State<AddCVScreen> {
       _addressController.text = widget.existingData!['address'] ?? "";
       
      
-      if (widget.existingData!['skills'] != null) {
-        for (var skill in widget.existingData!['skills']) {
+      final skills = widget.existingData!['skills'];
+      if (skills is List) {
+        for (final skill in skills) {
           _skillControllers.add(TextEditingController(text: skill.toString()));
         }
       }
 
       
-      if (widget.existingData!['experience'] != null) {
-        for (var exp in widget.existingData!['experience']) {
+      final experience = widget.existingData!['experience'];
+      if (experience is List) {
+        for (final exp in experience) {
+          if (exp is! Map) continue;
+          final m = Map<String, dynamic>.from(
+            exp.map((k, v) => MapEntry(k.toString(), v)),
+          );
           _experienceFields.add({
-            'company': TextEditingController(text: exp['company'] ?? ""),
-            'role': TextEditingController(text: exp['role'] ?? ""),
-            'years': TextEditingController(text: exp['years'] ?? ""),
+            'company': TextEditingController(text: "${m['company'] ?? ''}"),
+            'role': TextEditingController(text: "${m['role'] ?? ''}"),
+            'years': TextEditingController(text: "${m['years'] ?? ''}"),
           });
         }
       }
     }
 
-  
+    if (widget.initialIsPublic != null) {
+      isPublic = widget.initialIsPublic!;
+    }
+
     if (_experienceFields.isEmpty) _addNewExperience();
     if (_skillControllers.isEmpty) _addNewSkill();
   }
@@ -154,6 +165,8 @@ class _AddCVScreenState extends State<AddCVScreen> {
                         _buildGlassInput("Company", Icons.business, controllers['company']!),
                         const SizedBox(height: 10),
                         _buildGlassInput("Your Role", Icons.assignment_ind, controllers['role']!),
+                        const SizedBox(height: 10),
+                        _buildGlassInput("Years / Period", Icons.date_range, controllers['years']!),
                       ],
                     ),
                   );
