@@ -1,14 +1,29 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cv_manager/features/cv_builder/screens/cv_preview_screen.dart';
 import 'package:cv_manager/features/cv_builder/screens/final_cv_view.dart';
 import '../../cv_builder/screens/template_selection_screen.dart';
-import 'package:cv_manager/services/firebase/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cv_manager/services/auth_service.dart';
-import 'login_screen.dart';
-import 'package:cv_manager/features/cv_builder/screens/add_cv_screen.dart';
+
+/// Firestore saves CV fields at the document root. Older data may use nested `userData`.
+Map<String, dynamic> _existingCvDataForEditor(Map<String, dynamic> doc) {
+  final raw = doc['userData'];
+  if (raw is Map) {
+    return Map<String, dynamic>.from(
+      raw.map((k, v) => MapEntry(k.toString(), v)),
+    );
+  }
+  return {
+    'name': doc['name'] ?? '',
+    'jobTitle': doc['jobTitle'] ?? '',
+    'summary': doc['summary'] ?? '',
+    'phone': doc['phone'] ?? '',
+    'email': doc['email'] ?? '',
+    'address': doc['address'] ?? '',
+    'skills': doc['skills'],
+    'experience': doc['experience'],
+  };
+}
 
 class HomeScreen extends StatelessWidget {
   final bool isDark; 
@@ -16,8 +31,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? "";
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -228,8 +241,11 @@ class HomeScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => TemplateSelectionScreen(
                               isDark: isDark,
-                              existingData: data['userData'], // تمرير البيانات القديمة
-                              docId: docId, // تمرير الـ ID لتعديله لاحقاً
+                              existingData: _existingCvDataForEditor(data),
+                              docId: docId,
+                              initialIsPublic: data['isPublic'] is bool
+                                  ? data['isPublic'] as bool
+                                  : true,
                             ),
                           ),
                         );
