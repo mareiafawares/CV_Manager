@@ -46,6 +46,7 @@ dependencies:
   google_fonts: ^6.1.0
   google_sign_in: ^6.2.1
   provider: ^6.1.1
+  flutter_launcher_icons: ^0.14.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -62,13 +63,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
   assets:
     - asset/google.png
     - asset/github.png
@@ -76,6 +71,17 @@ flutter:
     - asset/temp2.png
     - asset/temp3.png
     - asset/temp4.png
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "asset/icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "asset/icon.png"
+  min_sdk_android: 21
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

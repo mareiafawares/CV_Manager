@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
-import 'features/auth/screens/splash_screen.dart'; 
+
 import 'features/auth/screens/login_screen.dart';
 
 
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
        
       ),
       
-      home: const SplashScreen(), 
+      home: const LoginScreen(), 
     );
   }
 }

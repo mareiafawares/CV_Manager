@@ -23,18 +23,19 @@ class CustomTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       obscureText: isPassword,
-      validator: validator, 
+      validator: validator,
+      style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
-        prefixIcon: Icon(icon),
+        prefixIcon: Icon(icon, color: Colors.black54),
         hintText: hint,
+        hintStyle: const TextStyle(color: Colors.black26),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide.none,
         ),
         filled: true,
         fillColor: Colors.white,
-        
-        errorStyle: const TextStyle(color: Colors.red), 
+        errorStyle: const TextStyle(color: Colors.red),
       ),
     );
   }
