@@ -7,53 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:947085150136:android:0a09ff84077cffdffeb14d",
+        "mobilesdk_app_id": "1:947085150136:android:3b169426535ae20ffeb14d",
         "android_client_info": {
-          "package_name": "com.example.cv_manager"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "947085150136-ou1ef2761nh22olf7fnv57ovb07l2nqt.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.cv_manager",
-            "certificate_hash": "8d738665d2cb1b5f3dabf798808109a04e7ce84a"
-          }
-        },
-        {
-          "client_id": "947085150136-eklddb1pcqnlfdbgagr4lvpo3ipq9m65.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDsH4iRhHQjsyumRZIf-SRPonVL1QiFBIs"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "947085150136-eklddb1pcqnlfdbgagr4lvpo3ipq9m65.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "947085150136-6pbfuqhenth62usijp8j0iddlrmbr7d3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.cvManager"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:947085150136:android:511e265b60de910dfeb14d",
-        "android_client_info": {
-          "package_name": "com.mareiafawares.cv_do_mareia"
+          "package_name": "com.digitalfrontier.app"
         }
       },
       "oauth_client": [

@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDsH4iRhHQjsyumRZIf-SRPonVL1QiFBIs',
-    appId: '1:947085150136:android:0a09ff84077cffdffeb14d',
+    appId: '1:947085150136:android:3b169426535ae20ffeb14d',
     messagingSenderId: '947085150136',
     projectId: 'cv-manager-1a6ae',
     storageBucket: 'cv-manager-1a6ae.firebasestorage.app',
