@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'CV Manager',
+      title: 'CV Pro',
     theme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.dark, 

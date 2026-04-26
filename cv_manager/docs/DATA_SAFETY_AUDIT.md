@@ -1,4 +1,4 @@
-# CV Manager — Data fields & Google Play Data safety (code audit)
+# CV Pro — Data fields & Google Play Data safety (code audit)
 
 Codebase snapshot: `cv_manager/`. This matches **what the app actually does**; answer the Play **Data safety** form to match (update if you change the app).
 
@@ -10,7 +10,6 @@ Codebase snapshot: `cv_manager/`. This matches **what the app actually does**; a
 |-----------|------------|------------------|
 | **Firebase Auth** | `firebase_auth` | Account email, Firebase UID; passwords handled by Google (not stored in your app code). |
 | **Cloud Firestore** | `cloud_firestore` | All structured fields in tables below. |
-| **Firebase Analytics (Android)** | `com.google.firebase:firebase-analytics` in `android/app/build.gradle.kts` | **Declare** analytics / app activity in Data safety (see §4). Analytics has user-level controls; follow current Play guidance. |
 | **Google Fonts** | `google_fonts` | Fetches font files (e.g. Poppins) at runtime; requests go to **Google**; typically declare only if the form requires “network” / provider disclosure—often bundled under “service provider” or not personal data, but be transparent. |
 | **PDF / printing / screenshot** | `pdf`, `printing`, `screenshot` | **Local** generation/sharing; no server upload in code. |
 | **path_provider** | `path_provider` | Local paths only. |
@@ -83,7 +82,7 @@ Stored at document root as spread `userData` plus:
 
 Answer **“Does your app collect or share any of the required data types?”** with **Yes** for at least: **Personal info** (name, email, address, phone), **User IDs** (Firebase UID, sender/receiver ids in notifications if you treat as identifiers), **Other** or **User-generated content** (CV text, work history, skills, public/private flag, likes, notification messages as applicable).
 
-| Play category (use exact labels from the form) | What to include for CV Manager |
+| Play category (use exact labels from the form) | What to include for CV Pro |
 |------------------------------------------------|---------------------------------|
 | **Name** | `users.name`, `cvs.name`, `notifications.senderName` (where present). |
 | **Email** | `users.email`, `cvs.email`, Auth email. |
@@ -91,8 +90,7 @@ Answer **“Does your app collect or share any of the required data types?”** 
 | **Phone number** | `cvs.phone`. |
 | **User IDs** | Auth UID, `cvs.userId`, `receiverId` / `senderId`. |
 | **Other user-generated content** (or file/docs if the form offers it) | Bio/summary, job title, experience, skills, public CV text, like counts, in-app notification text. |
-| **App activity** (if Analytics is on) | e.g. interactions / sessions — per Firebase Analytics’ actual collection. |
-| **App info and performance** | Crashes or diagnostics if Analytics/Play delivers them. |
+| **App info and performance** | Optional: Play app quality / pre-launch if you use those; not from Firebase Analytics in this project. |
 
 - **Data shared:** Firebase/Google as **infrastructure** for auth and database.  
 - **Encryption in transit:** **Yes** (HTTPS to Google).  

@@ -1,11 +1,11 @@
 {
-    "name": "cv_manager",
-    "short_name": "cv_manager",
+    "name": "CV Pro",
+    "short_name": "CV Pro",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "CV Pro — build and manage professional CVs.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

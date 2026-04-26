@@ -1,13 +1,13 @@
-# Google Play: Upload CV Manager and complete Data Safety & policies
+# Google Play: Upload CV Pro and complete Data Safety & policies
 
-This guide is for the **CV Manager** Flutter app (`com.digitalfrontier.app`) using **Firebase Authentication** and **Cloud Firestore**, published under:
+This guide is for the **CV Pro** Flutter app (`com.digitalfrontier.app`) using **Firebase Authentication** and **Cloud Firestore**, published under:
 
 | Field | Value |
 |--------|--------|
 | **Developer / company (store listing)** | Digital Frontier Applications Studio |
 | **Support & privacy contact email** | jaeereyreedeso@gmail.com |
 
-> **Clarify app name in Play Console:** The `applicationId` is `com.digitalfrontier.app`. The public name on the store (e.g. "CV Manager") is set in **Store listing** and can differ from the application id.
+> **Clarify app name in Play Console:** The `applicationId` is `com.digitalfrontier.app`. The public name on the store (e.g. **"CV Pro"**) is set in **Store listing** and can differ from the application id.
 
 ---
 
@@ -86,13 +86,13 @@ Complete **App content → Data safety** in Play Console. Answers must **match**
 
 **Examples of data types to declare (verify against your app):**
 
-| Category (Play) | What it often maps to in CV Manager + Firebase |
+| Category (Play) | What it often maps to in CV Pro + Firebase |
 |-----------------|-----------------------------------------------|
 | **Personal info** | Name, email (account / profile) |
 | **User IDs** | Firebase UID linked to the account |
 | **Other user content** | CVs, profile fields, text saved in Firestore (not listed under a narrower category) |
 
-- **Data usage:** App functionality, account management (and **Analytics** if you use Firebase Analytics — your `build.gradle` includes it; if enabled in code, declare it).
+- **Data usage:** App functionality, account management (this project does not ship Firebase Analytics in `app/build.gradle.kts`).
 
 - **Data sharing / third parties:**  
   - Firebase/Google as **service provider** for auth and database. Declare according to the form (often “Data is transferred to a third party” for cloud backend — follow Google’s wording in the form for your situation).
@@ -105,7 +105,7 @@ Complete **App content → Data safety** in Play Console. Answers must **match**
   - If users can delete CVs in-app, say users can request deletion of some data in the app.  
   - If **full account deletion** is not in the app yet, you must still describe how users can request data deletion (e.g. **email to jaeereyreedeso@gmail.com**) and comply with your policy. Google’s policies also expect a path for users to **delete** their data or account; consider adding **in-app “Delete my account”** in a future update to align with best practice.
 
-**Revisit Data safety** whenever you change: Firebase config, new SDKs, ads, or analytics.
+**Revisit Data safety** whenever you change: Firebase config, new SDKs, or ads.
 
 ---
 
@@ -127,7 +127,7 @@ Host the folder (or the two files) on **HTTPS** (e.g. GitHub Pages, Netlify, Goo
 ## Part 6 — Quick checklist before production
 
 - [ ] `flutter build appbundle` succeeds; tested on a device from **Internal/Closed** track.  
-- [ ] **Data safety** completed and consistent with Firebase + Analytics use.  
+- [ ] **Data safety** completed and consistent with Firebase (no separate Analytics SDK in the app).  
 - [ ] **Privacy policy URL** live and points to the correct content.  
 - [ ] **Support email** **jaeereyreedeso@gmail.com** is monitored.  
 - [ ] **Content rating** and **target audience** completed.  

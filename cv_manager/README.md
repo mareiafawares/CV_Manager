@@ -1,6 +1,6 @@
-# cv_manager
+# CV Pro (cv_manager)
 
-A new Flutter project.
+**CV Pro** — build and manage professional CVs. Flutter + Firebase.
 
 ## Getting Started
 
