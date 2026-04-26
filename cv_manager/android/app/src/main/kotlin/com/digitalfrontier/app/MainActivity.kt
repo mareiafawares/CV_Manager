@@ -1,4 +1,4 @@
-package com.example.cv_manager
+package com.digitalfrontier.app
 
 import io.flutter.embedding.android.FlutterActivity
 

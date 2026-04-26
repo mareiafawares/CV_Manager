@@ -1,13 +1,13 @@
 # Google Play: Upload CV Manager and complete Data Safety & policies
 
-This guide is for the **CV Manager** Flutter app (`com.mareiafawares.cv_do_mareia`) using **Firebase Authentication** and **Cloud Firestore**, published under:
+This guide is for the **CV Manager** Flutter app (`com.digitalfrontier.app`) using **Firebase Authentication** and **Cloud Firestore**, published under:
 
 | Field | Value |
 |--------|--------|
 | **Developer / company (store listing)** | Digital Frontier Applications Studio |
 | **Support & privacy contact email** | jaeereyreedeso@gmail.com |
 
-> **Clarify app name in Play Console:** The package id is `com.mareiafawares.cv_do_mareia`. The public name on the store (e.g. "CV Manager") is set in **Store listing** and can differ from the application id.
+> **Clarify app name in Play Console:** The `applicationId` is `com.digitalfrontier.app`. The public name on the store (e.g. "CV Manager") is set in **Store listing** and can differ from the application id.
 
 ---
 

@@ -16,7 +16,10 @@ plugins {
 }
 
 android {
-    namespace = "com.mareiafawares.cv_do_mareia"
+    // Plugins (e.g. jni) may require NDK 28; NDKs are backward compatible.
+    ndkVersion = "28.2.13676358"
+    // Must match package in MainActivity.kt; applicationId should match android/app/google-services.json.
+    namespace = "com.digitalfrontier.app"
     compileSdk = flutter.compileSdkVersion
 
     sourceSets {
@@ -24,11 +27,13 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"] as String
+        if (keystorePropertiesFile.exists()) {
+            create("release") {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+                storePassword = keystoreProperties["storePassword"] as String
+            }
         }
     }
 
@@ -42,7 +47,9 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
