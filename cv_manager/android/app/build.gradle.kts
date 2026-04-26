@@ -33,7 +33,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.mareiafawares.cv_do_mareia"
+        applicationId = "com.digitalfrontier.app"
         minSdk = flutter.minSdkVersion
         targetSdk = 35
         versionCode = flutter.versionCode
