@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Request deletion of your data for CV Manager — Digital Frontier Applications Studio" />
+  <title>Data Deletion &amp; User Rights — CV Manager</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.55; max-width: 42rem; margin: 2rem auto; padding: 0 1.25rem; color: #1a1a1a; }
+    h1 { font-size: 1.45rem; margin-bottom: 0.25rem; }
+    h2 { font-size: 1.12rem; margin-top: 1.6rem; margin-bottom: 0.5rem; }
+    a { color: #0b57d0; }
+    .meta { color: #444; font-size: 0.95rem; margin-bottom: 1.5rem; }
+    .meta strong { color: #111; }
+    label { display: block; font-weight: 600; margin-top: 1rem; font-size: 0.9rem; }
+    input[type="text"], input[type="email"], select, textarea { width: 100%; max-width: 32rem; box-sizing: border-box; padding: 0.5rem 0.65rem; font: inherit; margin-top: 0.35rem; border: 1px solid #ccc; border-radius: 6px; }
+    textarea { min-height: 5rem; resize: vertical; }
+    .row { margin-top: 0.5rem; }
+    button { margin-top: 1.25rem; padding: 0.6rem 1.2rem; font: inherit; font-weight: 600; color: #fff; background: #0b57d0; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #0945a8; }
+    .hint { font-size: 0.85rem; color: #555; margin-top: 0.75rem; }
+    .checkbox { display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 1rem; max-width: 32rem; }
+    .checkbox input { margin-top: 0.2rem; }
+    nav { font-size: 0.9rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e0e0e0; }
+  </style>
+</head>
+<body>
+  <h1>Data Deletion &amp; User Rights</h1>
+  <p class="meta">
+    <strong>Developer:</strong> Digital Frontier Applications Studio<br />
+    <strong>App:</strong> CV Manager (com.mareiafawares.cv_do_mareia)<br />
+    <strong>Contact:</strong> <a href="mailto:jaeereyreedeso@gmail.com?subject=CV%20Manager%20%E2%80%94%20data%20deletion">jaeereyreedeso@gmail.com</a><br />
+    <em>Last updated: April 26, 2026</em>
+  </p>
+
+  <h2>How to request deletion</h2>
+  <p>Fill in the form below, then use <strong>Open in email</strong> to create a pre-filled message to us. We verify ownership of the account (for example, by using the same email you use in the app) before deleting data, where reasonable and permitted by law. You can also write manually to the same address with subject: <strong>CV Manager — data deletion</strong>.</p>
+
+  <form id="deletion-form" action="#" method="get">
+    <div>
+      <label for="requester_email">Account email (the one you use in the app) *</label>
+      <input type="email" id="requester_email" name="requester_email" required autocomplete="email" />
+    </div>
+    <div>
+      <label for="full_name">Your full name (optional, helps verify the request)</label>
+      <input type="text" id="full_name" name="full_name" autocomplete="name" />
+    </div>
+    <div>
+      <label for="deletion_scope">What should be deleted? *</label>
+      <select id="deletion_scope" name="deletion_scope" required>
+        <option value="">— Please choose —</option>
+        <option value="single_cv">One or more specific CVs (describe in details below)</option>
+        <option value="all_cvs">All saved CVs / app content, but keep my login account</option>
+        <option value="full_account">Full account and all data (if we can process this request)</option>
+      </select>
+    </div>
+    <div>
+      <label for="details">Details (e.g. CV name or extra context)</label>
+      <textarea id="details" name="details" rows="5"></textarea>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="confirm_ownership" name="confirm_ownership" required />
+      <label for="confirm_ownership" style="font-weight: normal; margin-top: 0;">I confirm this request relates to my own account data. *</label>
+    </div>
+    <button type="button" id="open-email">Open in email</button>
+    <p class="hint" id="mailto-fallback">If your device does not open a mail app, copy the form contents into an email to <a href="mailto:jaeereyreedeso@gmail.com">jaeereyreedeso@gmail.com</a>.</p>
+  </form>
+
+  <h2>What we delete</h2>
+  <p>When your request is confirmed, we delete or anonymize the personal data associated with your request, using our systems (Firebase Auth and Firestore) and any legal obligations.</p>
+
+  <h2>In-app deletion</h2>
+  <p>You can delete individual CVs in the app where that is offered. If full account removal is not available in your app version, use the email process above.</p>
+
+  <nav>
+    <a href="privacy-policy.html">Privacy Policy</a>
+  </nav>
+  <p>— Digital Frontier Applications Studio</p>
+
+  <script>
+    (function () {
+      var to = "jaeereyreedeso@gmail.com";
+      var subj = "CV Manager \u2014 data deletion";
+      var btn = document.getElementById("open-email");
+      var form = document.getElementById("deletion-form");
+      btn.addEventListener("click", function () {
+        if (!form.reportValidity()) return;
+        if (!document.getElementById("confirm_ownership").checked) {
+          form.reportValidity();
+          return;
+        }
+        var email = document.getElementById("requester_email").value.trim();
+        var name = document.getElementById("full_name").value.trim();
+        var scope = document.getElementById("deletion_scope");
+        var scopeText = scope.options[scope.selectedIndex] ? scope.options[scope.selectedIndex].text : "";
+        var det = document.getElementById("details").value.trim();
+        var lines = [
+          "Data deletion request — CV Manager",
+          "Account email: " + email,
+        ];
+        if (name) lines.push("Name: " + name);
+        lines.push("Request: " + scopeText);
+        if (det) lines.push("Details:\n" + det);
+        lines.push("");
+        lines.push("— Sent via data-deletion page");
+        var body = lines.join("\n");
+        var href = "mailto:" + encodeURIComponent(to) + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body);
+        window.location.href = href;
+      });
+    })();
+  </script>
+</body>
+</html>

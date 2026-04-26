@@ -44,7 +44,6 @@ dependencies:
   path_provider: ^2.1.1
   screenshot: ^3.0.0
   google_fonts: ^6.1.0
-  google_sign_in: ^6.2.1
   provider: ^6.1.1
   flutter_launcher_icons: ^0.14.4
 dev_dependencies:
@@ -65,8 +64,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - asset/google.png
-    - asset/github.png
     - asset/temp1.png
     - asset/temp2.png
     - asset/temp3.png
